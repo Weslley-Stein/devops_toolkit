@@ -23,10 +23,22 @@ jobs:
     needs: install
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - run: echo "Building the image..."
-      - run: docker build -t devops_toolkit:latest .
-      - run: docker images
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up Docker Buildx
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          tags: devops_toolkit:latest 
+          outputs: type=docker,dest=/tmp/docker_image.tar
+      - name:
+        uses: actions/upload-artifact@v3
+        with:
+          name: docker_image 
+          path: /tmp/docker_image.tar
+          #- run: echo "Building the image..."
+          #- run: docker build -t devops_toolkit:latest .
+          #- run: docker images
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -34,7 +46,13 @@ jobs:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Download Artifact
+        uses: actions/download-artifact@v3 
+        with:
+          name: docker_image
+          path: /tmp
+      - name: Checkout
+        uses: actions/checkout@v3
       - run: docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
       - run: docker push devops_toolkit:latest
       - run: docker images
