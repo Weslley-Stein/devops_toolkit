@@ -9,32 +9,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Updating the Operational System
-        run: |
-          echo "Updating System..."
-          sudo apt-get update -y
-      - name: Installing Docker Enginer
-        run: |
-          echo "Installing Docker..."
-          sudo apt-get install ca-certificates curl gnupg
-          sudo install -m 0755 -d /etc/apt/keyrings
-          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+        - run: echo "Updating System..."
+        - run: sudo apt-get update -y
+        - run: echo "Installing Docker..."
+        - run: sudo apt-get install ca-certificates curl gnupg
+        - run: sudo install -m 0755 -d /etc/apt/keyrings
+        - run: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
           sudo chmod a+r /etc/apt/keyrings/docker.gpg
           echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-          sudo apt-get update
-          sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+        - run: sudo apt-get update
+        - run: sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Fetching Credentials
-        env: 
+      - env: 
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Build the image
-        run: |
-          echo "Building the image..."
-          docker build -t devops_toolkit:latest .
-      - name: Pushing the image to Docker Hub
-        run: docker login --username $DOCKER_USERNAME --password DOCKER_PASSWORD
+      - run: echo "Building the image..."
+      - run: docker build -t devops_toolkit:latest .
+      - run: docker login --username $DOCKER_USERNAME --password DOCKER_PASSWORD
+
 
