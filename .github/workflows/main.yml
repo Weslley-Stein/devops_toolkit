@@ -22,8 +22,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env: 
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD}}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     steps:
       - run: echo "Building the image..."
       - run: docker build -t devops_toolkit:latest .
