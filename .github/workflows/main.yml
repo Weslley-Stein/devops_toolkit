@@ -25,6 +25,7 @@ jobs:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     steps:
+      - uses: actions/checkout@v3
       - run: echo "Building the image..."
       - run: docker build -t devops_toolkit:latest .
       - run: docker login --username $DOCKER_USERNAME --password DOCKER_PASSWORD
