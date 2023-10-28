@@ -48,14 +48,16 @@ jobs:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Download Artifact
         uses: actions/download-artifact@v3 
         with:
           name: docker_image
           path: /tmp
-      - name: Checkout
-        uses: actions/checkout@v3
-      - run: docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+      - name: Load Image
+        run: docker load --input /tmp/docker_image.tar
+      - name: Docker Logon
+        run: docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+      - name: Image Push
       - run: docker push devops_toolkit:latest
-      - run: docker images
-
