@@ -20,6 +20,7 @@ jobs:
         - run: sudo apt-get update
         - run: sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
   build:
+    needs: install
     runs-on: ubuntu-latest
     env: 
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
