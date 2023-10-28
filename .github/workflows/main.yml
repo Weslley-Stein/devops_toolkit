@@ -5,22 +5,7 @@ on:
     branches: ["dev"]
 
 jobs:
-  install:
-    runs-on: ubuntu-latest
-    steps:
-        - uses: actions/checkout@v3
-          #- run: echo "Updating System..."
-          #- run: sudo apt-get update -y
-        - run: echo "Installing Docker..."
-          #- run: sudo apt-get install ca-certificates curl gnupg
-          #- run: sudo install -m 0755 -d /etc/apt/keyrings
-          #- run: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-          #- run: sudo chmod a+r /etc/apt/keyrings/docker.gpg
-          #- run: echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-          #- run: sudo apt-get update
-          #- run: sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
   build:
-    needs: install
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -32,15 +17,12 @@ jobs:
         with:
           context: .
           tags: devops_toolkit:latest 
-          outputs: type=docker,dest=/tmp/docker_image.tar
-      - name:
+          outputs: type=docker,dest=/tmp/devops_toolkit.tar
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: docker_image 
-          path: /tmp/docker_image.tar
-          #- run: echo "Building the image..."
-          #- run: docker build -t devops_toolkit:latest .
-          #- run: docker images
+          path: /tmp/devops_toolkit.tar
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -53,11 +35,13 @@ jobs:
       - name: Download Artifact
         uses: actions/download-artifact@v3 
         with:
-          name: docker_image
+          name: devops_toolkit
           path: /tmp
       - name: Load Image
-        run: docker load --input /tmp/docker_image.tar
+        run: docker load --input /tmp/devops_toolkit.tar
       - name: Docker Logon
         run: docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+      - name: Tag image
+        run: docker tag devops_toolkit weslleystein/devops_toolkit
       - name: Image Push
-        run: docker push devops_toolkit:latest
+        run: docker push weslleystein/devops_toolkit
