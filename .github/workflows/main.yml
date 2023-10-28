@@ -26,6 +26,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up Docker Buildx
+        uses: docker/build-buildx-action@v3
+      - name: Build and Export
         uses: docker/build-push-action@v5
         with:
           context: .
