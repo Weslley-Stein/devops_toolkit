@@ -29,5 +29,5 @@ jobs:
       - run: echo "Building the image..."
       - run: docker build -t devops_toolkit:latest .
       - run: docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-
+      - run: docker push devops_toolkit:latest
 
