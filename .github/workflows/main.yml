@@ -19,13 +19,9 @@ jobs:
         - run: echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
         - run: sudo apt-get update
         - run: sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
   build:
     runs-on: ubuntu-latest
     steps:
-      - env: 
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       - run: echo "Building the image..."
       - run: docker build -t devops_toolkit:latest .
       - run: docker login --username $DOCKER_USERNAME --password DOCKER_PASSWORD
