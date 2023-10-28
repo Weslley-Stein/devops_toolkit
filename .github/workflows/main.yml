@@ -22,13 +22,18 @@ jobs:
   build:
     needs: install
     runs-on: ubuntu-latest
-    env: 
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     steps:
       - uses: actions/checkout@v3
       - run: echo "Building the image..."
       - run: docker build -t devops_toolkit:latest .
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    env: 
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    steps:
+      -uses: actions/checkout@v3
       - run: docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
       - run: docker push devops_toolkit:latest
 
