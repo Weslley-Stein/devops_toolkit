@@ -3,6 +3,8 @@ echo "Going to root home..."
 cd /root
 echo "Installing essential packages..."
 yum install -y yum-utils vim curl git make
+echo "Installing Go Toolkit..."
+yum module install go-toolset
 yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
 echo "Installing Terraform..."
 yum -y install terraform
