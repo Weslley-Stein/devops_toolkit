@@ -33,7 +33,7 @@ jobs:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     steps:
-      -uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       - run: docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
       - run: docker push devops_toolkit:latest
 
