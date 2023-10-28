@@ -8,7 +8,7 @@ jobs:
   install:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+        - uses: actions/checkout@v3
         - run: echo "Updating System..."
         - run: sudo apt-get update -y
         - run: echo "Installing Docker..."
